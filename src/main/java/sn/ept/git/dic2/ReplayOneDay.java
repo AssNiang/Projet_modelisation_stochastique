@@ -1,18 +1,20 @@
-package sn.git.dic2.tf;
+package sn.ept.git.dic2;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
+import sn.ept.git.dic2.events.QueueArrival;
 import umontreal.ssj.simevents.*;
 import umontreal.ssj.rng.*;
 import umontreal.ssj.randvar.*;
 import umontreal.ssj.stat.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Scanner;
+
 import umontreal.ssj.charts.HistogramChart;
 import umontreal.ssj.charts.EmpiricalChart;
 
@@ -25,9 +27,12 @@ public class ReplayOneDay {
     private LinkedList[] array_Avg_LES = new LinkedList[27];
     private LinkedList[][] array_AvgC_LES = new LinkedList[27][50];
     private double[][] array_WAvgC_LES = new double[27][50];
-    private int nb_servers = 0;
+    private int nb_busy_servers = 0;
     private ArrayList<Customer> served_customer = new ArrayList<>();
     private ArrayList<Customer> abandon_customer = new ArrayList<>();
+
+    private HashMap<Integer, Integer> map = new HashMap<>();
+
 
     public ReplayOneDay() {
         for (int i=0; i<27; i++){
@@ -36,6 +41,34 @@ public class ReplayOneDay {
                 array_AvgC_LES[i][j] = new LinkedList<Double>();
             }
         }
+        // mapping type:index
+        map.put(30175, 0);
+        map.put(30560, 1);
+        map.put(30172, 2);
+        map.put(30066, 3);
+        map.put(30176, 4);
+        map.put(30179, 5);
+        map.put(30173, 6);
+        map.put(30511, 7);
+        map.put(30181, 8);
+        map.put(30519, 9);
+        map.put(30241, 10);
+        map.put(30174, 11);
+        map.put(30325, 12);
+        map.put(30363, 13);
+        map.put(30334, 14);
+        map.put(30180, 15);
+        map.put(30236, 16);
+        map.put(30177, 17);
+        map.put(30178, 18);
+        map.put(30584, 19);
+        map.put(30598, 20);
+        map.put(30518, 21);
+        map.put(30170, 22);
+        map.put(30694, 23);
+        map.put(30729, 24);
+        map.put(30747, 25);
+        map.put(30764, 26);
     }
 
     public void createCustomerOfTheDay(String file) throws IOException {
@@ -56,7 +89,7 @@ public class ReplayOneDay {
             }
 
             //On programme la rentree du cust dans la
-            new Arrival(cust).schedule(cust.getArrival_time());
+            new QueueArrival(cust).schedule(cust.getArrival_time());
             read_line = br.readLine();
         }
     }
@@ -75,42 +108,10 @@ public class ReplayOneDay {
         }
     }
 
-    public class Arrival extends Event {
-        Customer cust;
-
-        public Arrival(Customer cust){
-            this.cust = cust;
-        }
-
-        public void actions() {
-//            Initialisation des predicteurs(LES, AvgLES, AvgCLES, WAvgCLES)
-//            Initialiser nb_servers(le nombre de serveurs occupes)
-//            Placer le cust dans la file
-//            scheduler son depart(abandon ou servis) de la file dans wainting_time;
-//            Incrementer le nombre de cust de ce type   (array_queue_length)
-
-        }
 
 
-    }
 
-    public class Departure extends Event {
-        Customer cust;
+    
 
-        public Departure(Customer cust){
-            this.cust = cust;
-        }
-
-        public void actions() {
-//         Mettre a jours les donnees utilisees par les predicteurs
-//         Decrementer le nb cust de ce type()  (array_queue_length)
-//         Si depart == abandon alors mettre cust dans la liste des cust abandonnes  (abandon_customer)
-//         Si depart == debutService alors incrementer nb_servers
-//              schudeler la fin de service
-
-        }
-
-
-    }
 
 }

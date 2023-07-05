@@ -1,4 +1,4 @@
-package sn.git.dic2.tf;
+package sn.ept.git.dic2;
 
 
 import javax.swing.table.TableRowSorter;
