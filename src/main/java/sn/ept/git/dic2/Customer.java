@@ -7,7 +7,7 @@ public class Customer {
 //    type of service
     private int type;
 //    contains the length of the files
-    private int[] length_file = new int[27];
+    private int[] queue_length = new int[27];
 
 //    arrival time of the customer
     private double arrival_time;
@@ -31,12 +31,12 @@ public class Customer {
         this.type = type;
     }
 
-    public int[] getLength_file() {
-        return length_file;
+    public int[] getQueue_length() {
+        return queue_length;
     }
 
-    public void setLength_file(int[] length_file) {
-        this.length_file = length_file;
+    public void setQueue_length(int[] queue_length) {
+        this.queue_length = queue_length.clone();
     }
 
     public double getArrival_time() {
@@ -95,7 +95,7 @@ public class Customer {
         this.waiting_time = waiting_time;
     }
 
-    public boolean isIs_served() {
+    public boolean getIs_served() {
         return is_served;
     }
 
@@ -110,4 +110,11 @@ public class Customer {
     public void setService_time(double service_time) {
         this.service_time = service_time;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "type=" + type + ", queue_length=" + queue_length + ", arrival_time=" + arrival_time + ", nb_server=" + nb_server + ", LES=" + LES + ", Avg_LES=" + Avg_LES + ", AvgC_LES=" + AvgC_LES + ", WAvgC_LES=" + WAvgC_LES + ", waiting_time=" + waiting_time + ", is_served=" + is_served + ", service_time=" + service_time + '}';
+    }
+    
+    
 }
