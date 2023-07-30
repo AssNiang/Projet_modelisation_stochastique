@@ -76,27 +76,33 @@ public class ReplayOneDay {
     
     private void createCustomerOfTheDay(List<String> list) {
         dateOfTheDay = list.get(0).split(",")[0].split(" ")[0];
-       
-        for(String read_line: list){
-            if(dateOfTheDay.equals(read_line.split(",")[0].split(" ")[0]) ){
-                Customer cust = new Customer();
+        String read_line = list.get(0);
+        while(read_line != null && dateOfTheDay.equals(read_line.split(",")[0].split(" ")[0]) ){
+            Customer cust = new Customer();
 
-                String[] elements =  read_line.split(",");
-                cust.setArrival_time(getTime(elements[0]));
-                cust.setType(Integer.parseInt(elements[1]));
-                cust.setWaiting_time(getWaitingTime(elements[0], elements[3], elements[6]));
-                if ("NULL".equals(elements[3])) {
-                    cust.setIs_served(false);
-                }
-                if (!"NULL".equals(elements[3])) {
-                    cust.setService_time(getTime(elements[6]) - getTime(elements[3]));
-                }
-                //System.out.println(cust);
-                //On programme la rentree du cust dans la
-                System.out.println(elements[0]);
-                new QueueArrival(cust, this).schedule(cust.getArrival_time());
+            String[] elements =  read_line.split(",");
+            cust.setArrival_time(getTime(elements[0]));
+            cust.setType(Integer.parseInt(elements[1]));
+            cust.setWaiting_time(getWaitingTime(elements[0], elements[3], elements[6]));
+            if ("NULL".equals(elements[3])) {
+                cust.setIs_served(false);
+            }
+            if (!"NULL".equals(elements[3])) {
+                cust.setService_time(getTime(elements[6]) - getTime(elements[3]));
+            }
+            //System.out.println(cust);
+            //On programme la rentree du cust dans la
+            //System.out.println(elements[0]);
+            new QueueArrival(cust, this).schedule(cust.getArrival_time());
+            list.remove(read_line);
+            if(!list.isEmpty()){
+            read_line = list.get(0);
+            }
+            else{
+                read_line=null;
             }
         }
+         
     }
 
    /* private void createCustomerOfTheDay(String file) throws IOException {

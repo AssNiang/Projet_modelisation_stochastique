@@ -30,9 +30,9 @@ public class Main {
 }
     
     private static void writeDataToCSV(String csvFilePath, ReplayOneDay rd) {
-    try (CSVWriter writer = new CSVWriter(new FileWriter(csvFilePath))) {
+    try (CSVWriter writer = new CSVWriter(new FileWriter(csvFilePath, true)) ) {
         // Créer un tableau de chaînes pour les en-têtes de colonnes
-        String[] headers = {
+        /*String[] headers = {
             "Type",
             "Queue Length",
             "Date",
@@ -48,7 +48,7 @@ public class Main {
         };
         
         // Écrire les en-têtes dans le fichier CSV
-        writer.writeNext(headers);
+        writer.writeNext(headers);*/
         
         // Parcourir les objets Customer de served_customer et écrire leurs données
         for (Customer customer : rd.getServed_customer()) {
@@ -82,9 +82,12 @@ public class Main {
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
             lines.remove(0);
-            ReplayOneDay rod = new ReplayOneDay(lines);
-            writeDataToCSV("C:\\Users\\HP Probook\\Desktop\\customersData.csv", rod);
-
+            System.out.println(lines.size());
+            while(!lines.isEmpty()){
+                ReplayOneDay rod = new ReplayOneDay(lines);
+                writeDataToCSV("C:\\Users\\HP Probook\\Desktop\\customersData.csv", rod);
+            }
+            //writeDataToCSV("C:\\Users\\HP Probook\\Desktop\\customersData.csv", rod);
         } catch (IOException e) {
             // Gérez toute exception éventuelle
 
