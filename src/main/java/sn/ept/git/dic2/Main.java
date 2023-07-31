@@ -35,7 +35,7 @@ public class Main {
 
             List<String> csvFile = Files.readAllLines(Paths.get(csvFilePath));
 
-            if(csvFile.isEmpty()){
+            if (csvFile.isEmpty()) {
                 String[] headers = {
                         "Type",
                         "Queue Length",
@@ -74,7 +74,7 @@ public class Main {
                 writer.writeNext(rowData);
             }
 
-            System.out.println("Les données ont été écrites avec succès dans le fichier CSV " + csvFilePath);
+            System.out.println("Les données du " + rd.getDateOfTheDay() + " ont été écrites avec succès dans le fichier CSV : " + csvFilePath);
         } catch (IOException e) {
         }
     }
@@ -93,42 +93,16 @@ public class Main {
             try {
                 List<String> lines = Files.readAllLines(Paths.get(fileDir + "\\" + file.getName()));
                 lines.remove(0);
-                System.out.println(lines.size());
-
-//                CSVWriter writer = new CSVWriter(new FileWriter("D:\\DIC2\\Modélisation Stochastique\\results\\" + file.getName()));
-//                // Créer un tableau de chaînes pour les en-têtes de colonnes
-//                List<String> csvFile = Files.readAllLines(Paths.get("D:\\DIC2\\Modélisation Stochastique\\results\\" + file.getName()));
-//
-//                String[] headers = {
-//                        "Type",
-//                        "Queue Length",
-//                        "Date",
-//                        "Arrival Time",
-//                        "Number of Busy Servers",
-//                        "LES",
-//                        "Avg_LES",
-//                        "AvgC_Les",
-//                        "WAvgC_LES",
-//                        "Waiting Time",
-//                        "Is Served",
-//                        "Service Time"
-//                };
-//
-//                // Écrire les en-têtes dans le fichier CSV
-//                writer.writeNext(headers);
 
                 while (!lines.isEmpty()) {
                     ReplayOneDay rod = new ReplayOneDay(lines);
                     writeDataToCSV("D:\\DIC2\\Modélisation Stochastique\\results\\" + file.getName(), rod);
                 }
-                //writeDataToCSV("C:\\Users\\HP Probook\\Desktop\\customersData.csv", rod);
             } catch (IOException e) {
                 // Gérez toute exception éventuelle
 
             }
-            System.out.println(">>>>>" + file.getName());
         }
-
 
     }
 }

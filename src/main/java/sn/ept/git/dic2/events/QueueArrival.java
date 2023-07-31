@@ -1,6 +1,5 @@
 package sn.ept.git.dic2.events;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import sn.ept.git.dic2.Customer;
 import sn.ept.git.dic2.ReplayOneDay;
@@ -13,7 +12,6 @@ public class QueueArrival extends Event {
     public QueueArrival(Customer cust, ReplayOneDay rd){
         this.cust = cust;
         this.rd = rd;
-        //System.out.println("Arrivé");
     }
     
     public static double getMoyenne(LinkedList<Double> liste){
@@ -29,7 +27,6 @@ public class QueueArrival extends Event {
 
     @Override
     public void actions() {
-        System.out.println("arrival");
         int type = rd.getMap().get(cust.getType());
         int queue_length = rd.getArray_queue_length()[type];
         
@@ -51,6 +48,6 @@ public class QueueArrival extends Event {
         new QueueDeparture(cust, rd).schedule(cust.getWaiting_time());
 //      Incrementer le nombre de cust de ce type   (array_queue_length)
         rd.updateArray_queue_length(type, 1);
-        System.out.println("Customer arrived");
+        //System.out.println("Customer arrived");
     }
 }
