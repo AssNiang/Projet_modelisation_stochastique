@@ -5,6 +5,7 @@
 package sn.ept.git.dic2;
 
 import com.opencsv.CSVWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,24 +32,8 @@ public class Main {
     
     private static void writeDataToCSV(String csvFilePath, ReplayOneDay rd) {
     try (CSVWriter writer = new CSVWriter(new FileWriter(csvFilePath, true)) ) {
-        // Créer un tableau de chaînes pour les en-têtes de colonnes
-        /*String[] headers = {
-            "Type",
-            "Queue Length",
-            "Date",
-            "Arrival Time",
-            "Number of Busy Servers",
-            "LES",
-            "Avg_LES",
-            "AvgC_Les",
-            "WAvgC_LES",
-            "Waiting Time",
-            "Is Served",
-            "Service Time"
-        };
+    
         
-        // Écrire les en-têtes dans le fichier CSV
-        writer.writeNext(headers);*/
         
         // Parcourir les objets Customer de served_customer et écrire leurs données
         for (Customer customer : rd.getServed_customer()) {
@@ -76,30 +61,54 @@ public class Main {
      public static void main(String[] args) throws IOException {
          
         // Spécifiez le chemin complet du fichier que vous souhaitez lire
-        String filePath = "D:\\DIC2\\Modélisation Stochastique\\Stochastique\\VANAD_data\\VANAD_data\\calls-2014-01.csv";
+        String fileDir = "D:\\DIC2\\Modélisation Stochastique\\data";
+        
+        File dir  = new File(fileDir);
+        File[] files = dir.listFiles();
 
         // Utilisez Files.readAllLines() pour lire toutes les lignes du fichier en une liste
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(filePath));
-            lines.remove(0);
-            System.out.println(lines.size());
-            while(!lines.isEmpty()){
-                ReplayOneDay rod = new ReplayOneDay(lines);
-                writeDataToCSV("C:\\Users\\HP Probook\\Desktop\\customersData.csv", rod);
-            }
-            //writeDataToCSV("C:\\Users\\HP Probook\\Desktop\\customersData.csv", rod);
-        } catch (IOException e) {
-            // Gérez toute exception éventuelle
+        for(File file: files){
+            System.out.println("------------------------------------------------------------------------------");
+            System.out.println(file.getName());
+            try {
+                List<String> lines = Files.readAllLines(Paths.get(fileDir + "\\" + file.getName()));
+                lines.remove(0);
+                System.out.println(lines.size());
 
+                CSVWriter writer = new CSVWriter(new FileWriter("C:\\Users\\HP Probook\\Desktop\\customers"+file.getName()+"Data.csv"));
+                // Créer un tableau de chaînes pour les en-têtes de colonnes
+                List <String> csvFile = Files.readAllLines(Paths.get("C:\\Users\\HP Probook\\Desktop\\customers"+file.getName()+"Data.csv"));
+     
+                    String[] headers = {
+                    "Type",
+                    "Queue Length",
+                    "Date",
+                    "Arrival Time",
+                    "Number of Busy Servers",
+                    "LES",
+                    "Avg_LES",
+                    "AvgC_Les",
+                    "WAvgC_LES",
+                    "Waiting Time",
+                    "Is Served",
+                    "Service Time"
+                };
+
+                // Écrire les en-têtes dans le fichier CSV
+                    writer.writeNext(headers);
+
+                while(!lines.isEmpty()){
+                    ReplayOneDay rod = new ReplayOneDay(lines);
+                    writeDataToCSV("C:\\Users\\HP Probook\\Desktop\\customers"+file.getName()+"Data.csv", rod);
+                }
+                //writeDataToCSV("C:\\Users\\HP Probook\\Desktop\\customersData.csv", rod);
+            } catch (IOException e) {
+                // Gérez toute exception éventuelle
+
+            }
+            
         }
                
-        
-       // rod.createCustomerOfTheDay("D:\\DIC2\\Modélisation Stochastique\\Stochastique\\VANAD_data\\VANAD_data\\calls-2014-01.csv");
-        
-        
-        
-        
-        
         
         
     }

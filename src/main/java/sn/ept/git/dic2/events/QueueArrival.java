@@ -21,7 +21,7 @@ public class QueueArrival extends Event {
         for(double i : liste){
             sum+=i;
         }
-        return sum/5;
+        return sum/liste.size();
     }
 
     @Override
