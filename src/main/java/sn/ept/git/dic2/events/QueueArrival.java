@@ -17,6 +17,9 @@ public class QueueArrival extends Event {
     }
     
     public static double getMoyenne(LinkedList<Double> liste){
+        if(liste.isEmpty()){
+            return 0;
+        }
         Double sum = 0.0;
         for(double i : liste){
             sum+=i;

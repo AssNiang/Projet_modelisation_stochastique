@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="796c5b48-8d39-4848-9b63-2a88ec1807ff" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/events/EndOfService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/events/QueueArrival.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/events/QueueDeparture.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/ReplayOneDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/ReplayOneDay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/events/QueueArrival.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sn/ept/git/dic2/events/QueueArrival.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +61,26 @@
       <recent name="C:\Users\LENOVO\IdeaProjects\Projet_modelisation_stochastique\src\main\java\sn\ept\git\dic2" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sn.ept.git.dic2.Main" />
+      <module name="Projet_modelisation_stochastique" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sn.ept.git.dic2.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -73,6 +91,7 @@
       <updated>1688484347559</updated>
       <workItem from="1688484348795" duration="3880000" />
       <workItem from="1688551745591" duration="2685000" />
+      <workItem from="1690830655433" duration="3558000" />
     </task>
     <servers />
   </component>

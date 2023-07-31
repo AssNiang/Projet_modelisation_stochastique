@@ -20,20 +20,21 @@ public class ReplayOneDay {
     private int[] array_queue_length =  new int[27];
     private double[] array_LES = new double[27];
     private LinkedList<Double>[] array_Avg_LES = new LinkedList[27];
-    private LinkedList[][] array_AvgC_LES = new LinkedList[27][50];
-    private double[][] array_WAvgC_LES = new double[27][50];
+    private LinkedList[][] array_AvgC_LES = new LinkedList[27][100];
+    private double[][] array_WAvgC_LES = new double[27][100];
     private int nb_busy_servers = 0;
     private ArrayList<Customer> served_customer = new ArrayList<>();
     private ArrayList<Customer> abandon_customer = new ArrayList<>();
 
     private HashMap<Integer, Integer> map = new HashMap<>();
     private String dateOfTheDay;
+    private String dayStartTime;
 
 
     public ReplayOneDay(List<String> list) {
         for (int i=0; i<27; i++){
             array_Avg_LES[i] = new LinkedList<Double>();
-            for (int j=0; j<50; j++){
+            for (int j=0; j<100; j++){
                 array_AvgC_LES[i][j] = new LinkedList<Double>();
             }
         }
@@ -76,6 +77,8 @@ public class ReplayOneDay {
     
     private void createCustomerOfTheDay(List<String> list) {
         dateOfTheDay = list.get(0).split(",")[0].split(" ")[0];
+        dayStartTime = dateOfTheDay + " 08:00:00";
+
         String read_line = list.get(0);
         while(read_line != null && dateOfTheDay.equals(read_line.split(",")[0].split(" ")[0]) ){
             Customer cust = new Customer();
@@ -84,19 +87,24 @@ public class ReplayOneDay {
             cust.setArrival_time(getTime(elements[0]));
             cust.setType(Integer.parseInt(elements[1]));
             cust.setWaiting_time(getWaitingTime(elements[0], elements[3], elements[6]));
-            if ("NULL".equals(elements[3])) {
+
+
+            if ("NULL".equals(elements[3]) || "NULL".equals(elements[6])) {
                 cust.setIs_served(false);
-            }
-            if (!"NULL".equals(elements[3])) {
+            } else {
                 cust.setService_time(getTime(elements[6]) - getTime(elements[3]));
             }
             //System.out.println(cust);
             //On programme la rentree du cust dans la
             //System.out.println(elements[0]);
-            new QueueArrival(cust, this).schedule(cust.getArrival_time());
+
+            if(getTime(dayStartTime) < cust.getArrival_time()){
+                new QueueArrival(cust, this).schedule(cust.getArrival_time());
+            }
+
             list.remove(read_line);
             if(!list.isEmpty()){
-            read_line = list.get(0);
+                read_line = list.get(0);
             }
             else{
                 read_line=null;
@@ -140,12 +148,14 @@ public class ReplayOneDay {
     }
 
     public double getTime(String s) {
+        System.out.println(s);
         String s1 = s.split(" ")[1];
         String[] time = s1.split(":");
         return Integer.parseInt(time[0])*3600 + Integer.parseInt(time[1])*60 + Integer.parseInt(time[2]) - 8*3600;
     }
 
     public double getWaitingTime(String arrival, String answered, String hangup){
+        System.out.println(arrival + " --- " + answered + " --- " + hangup);
         if (!"NULL".equals(answered)) {
             return getTime(answered) - getTime(arrival);
         } else {
