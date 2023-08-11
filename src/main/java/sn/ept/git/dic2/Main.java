@@ -18,18 +18,6 @@ import java.util.List;
  */
 public class Main {
 
-    // Méthode utilitaire pour convertir un tableau en chaîne séparée par des virgules
-    private static String arrayToString(int[] array) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < array.length; i++) {
-            sb.append(array[i]);
-            if (i != array.length - 1) {
-                sb.append(",");
-            }
-        }
-        return sb.toString();
-    }
-
     private static void writeDataToCSV(String csvFilePath, ReplayOneDay rd) {
         try (CSVWriter writer = new CSVWriter(new FileWriter(csvFilePath, true))) {
 
