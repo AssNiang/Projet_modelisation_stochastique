@@ -10,34 +10,51 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
 import umontreal.ssj.simevents.Sim;
 
 
 public class ReplayOneDay {
-    LinkedList<Customer> waitList = new LinkedList<Customer> ();
+    LinkedList<Customer> waitList = new LinkedList<Customer>();
 
     //Contains the length of queues
-    private int[] array_queue_length =  new int[27];
+    private int[] array_queue_length = new int[27];
     private double[] array_LES = new double[27];
     private LinkedList<Double>[] array_Avg_LES = new LinkedList[27];
-    private LinkedList[][] array_AvgC_LES = new LinkedList[27][50];
-    private double[][] array_WAvgC_LES = new double[27][50];
+    private LinkedList[][] array_AvgC_LES = new LinkedList[27][100];
+    private double[][] array_WAvgC_LES = new double[27][100];
     private int nb_busy_servers = 0;
     private ArrayList<Customer> served_customer = new ArrayList<>();
     private ArrayList<Customer> abandon_customer = new ArrayList<>();
 
     private HashMap<Integer, Integer> map = new HashMap<>();
     private String dateOfTheDay;
+    private String dayStartTime;
 
 
     public ReplayOneDay(List<String> list) {
-        for (int i=0; i<27; i++){
+        // initializing variables
+        this.initVariables(array_Avg_LES, array_AvgC_LES, array_WAvgC_LES);
+        // mapping type:index
+        this.mappingTypeIndex(map);
+
+        Sim.init();
+        this.createCustomerOfTheDay(list);
+        Sim.start();
+    }
+
+    private void initVariables(LinkedList<Double>[] array_Avg_LES, LinkedList<Double>[][] array_AvgC_LES, double[][]array_WAvgC_LES) {
+        for (int i = 0; i < 27; i++) {
             array_Avg_LES[i] = new LinkedList<Double>();
-            for (int j=0; j<50; j++){
+            for (int j = 0; j < 100; j++) {
                 array_AvgC_LES[i][j] = new LinkedList<Double>();
+                array_WAvgC_LES[i][j] = -1.0;
             }
         }
-        // mapping type:index
+
+    }
+
+    private void mappingTypeIndex(HashMap<Integer, Integer> map){
         map.put(30175, 0);
         map.put(30560, 1);
         map.put(30172, 2);
@@ -65,71 +82,42 @@ public class ReplayOneDay {
         map.put(30729, 24);
         map.put(30747, 25);
         map.put(30764, 26);
-        
-       
-        Sim.init();
-        createCustomerOfTheDay(list);
-        Sim.start();
     }
-    
-    
-    
+
     private void createCustomerOfTheDay(List<String> list) {
         dateOfTheDay = list.get(0).split(",")[0].split(" ")[0];
+        dayStartTime = dateOfTheDay + " 08:00:00";
+
         String read_line = list.get(0);
-        while(read_line != null && dateOfTheDay.equals(read_line.split(",")[0].split(" ")[0]) ){
+        while (read_line != null && dateOfTheDay.equals(read_line.split(",")[0].split(" ")[0])) {
             Customer cust = new Customer();
 
-            String[] elements =  read_line.split(",");
+            String[] elements = read_line.split(",");
             cust.setArrival_time(getTime(elements[0]));
             cust.setType(Integer.parseInt(elements[1]));
             cust.setWaiting_time(getWaitingTime(elements[0], elements[3], elements[6]));
-            if ("NULL".equals(elements[3])) {
+
+
+            if ("NULL".equals(elements[3]) || "NULL".equals(elements[6])) {
                 cust.setIs_served(false);
-            }
-            if (!"NULL".equals(elements[3])) {
+            } else {
                 cust.setService_time(getTime(elements[6]) - getTime(elements[3]));
             }
-            //System.out.println(cust);
-            //On programme la rentree du cust dans la
-            //System.out.println(elements[0]);
-            new QueueArrival(cust, this).schedule(cust.getArrival_time());
+
+            //On programme la rentree du cust dans la file (on considere seulement les arrivees entre 8h et 18h)
+            if (getTime(dayStartTime) < cust.getArrival_time()) {
+                new QueueArrival(cust, this).schedule(cust.getArrival_time());
+            }
+
             list.remove(read_line);
-            if(!list.isEmpty()){
-            read_line = list.get(0);
-            }
-            else{
-                read_line=null;
+            if (!list.isEmpty()) {
+                read_line = list.get(0);
+            } else {
+                read_line = null;
             }
         }
-         
-    }
 
-   /* private void createCustomerOfTheDay(String file) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        br.readLine();
-        String read_line = br.readLine();
-        dateOfTheDay = read_line.split(",")[0].split(" ")[0];
-        while (read_line != null && dateOfTheDay.equals(read_line.split(",")[0].split(" ")[0]) ){
-            Customer cust = new Customer();
-            
-            String[] elements =  read_line.split(",");
-            cust.setArrival_time(getTime(elements[0]));
-            cust.setType(Integer.parseInt(elements[1]));
-            cust.setWaiting_time(getWaitingTime(elements[0], elements[3], elements[6]));
-            if ("NULL".equals(elements[3])) {
-                cust.setIs_served(false);
-            }
-            if (!"NULL".equals(elements[3])) {
-                cust.setService_time(getTime(elements[6]) - getTime(elements[3]));
-            }
-            //System.out.println(cust);
-            //On programme la rentree du cust dans la
-            System.out.println(elements[0]);
-            new QueueArrival(cust, this).schedule(cust.getArrival_time());
-            read_line = br.readLine();
-        }
-    }*/
+    }
 
     public String getDateOfTheDay() {
         return dateOfTheDay;
@@ -142,10 +130,10 @@ public class ReplayOneDay {
     public double getTime(String s) {
         String s1 = s.split(" ")[1];
         String[] time = s1.split(":");
-        return Integer.parseInt(time[0])*3600 + Integer.parseInt(time[1])*60 + Integer.parseInt(time[2]) - 8*3600;
+        return Integer.parseInt(time[0]) * 3600 + Integer.parseInt(time[1]) * 60 + Integer.parseInt(time[2]) - 8 * 3600;
     }
 
-    public double getWaitingTime(String arrival, String answered, String hangup){
+    public double getWaitingTime(String arrival, String answered, String hangup) {
         if (!"NULL".equals(answered)) {
             return getTime(answered) - getTime(arrival);
         } else {
@@ -160,8 +148,8 @@ public class ReplayOneDay {
     public void addToWaitList(Customer cust) {
         this.waitList.addLast(cust);
     }
-    
-     public void removeFromWaitList() {
+
+    public void removeFromWaitList() {
         this.waitList.removeFirst();
     }
 
@@ -171,7 +159,7 @@ public class ReplayOneDay {
     }
 
     public void updateArray_queue_length(int type, int value) {
-        this.array_queue_length[type]+=value;
+        this.array_queue_length[type] += value;
     }
 
     public double[] getArray_LES() {
@@ -187,13 +175,12 @@ public class ReplayOneDay {
     }
 
     public void updateArray_Avg_LES(int type, double value) {
-          if(this.array_Avg_LES[type].size()<5){
-          this.array_Avg_LES[type].addLast(value);
+        if (this.array_Avg_LES[type].size() < 5) {
+            this.array_Avg_LES[type].addLast(value);
+        } else {
+            this.array_Avg_LES[type].addLast(value);
+            this.array_Avg_LES[type].removeFirst();
         }
-        else{
-          this.array_Avg_LES[type].addLast(value);
-          this.array_Avg_LES[type].removeFirst();
-        }   
 
     }
 
@@ -202,25 +189,28 @@ public class ReplayOneDay {
     }
 
     public void updateArray_AvgC_LES(int type, int queue_length, double value) {
-        if(this.array_AvgC_LES[type][queue_length].size()<5){
-          this.array_AvgC_LES[type][queue_length].addLast(value);
+        if (this.array_AvgC_LES[type][queue_length].size() < 5) {
+            this.array_AvgC_LES[type][queue_length].addLast(value);
+        } else {
+            this.array_AvgC_LES[type][queue_length].addLast(value);
+            this.array_AvgC_LES[type][queue_length].removeFirst();
         }
-        else{
-          this.array_AvgC_LES[type][queue_length].addLast(value);
-          this.array_AvgC_LES[type][queue_length].removeFirst();
-        }   
     }
 
-    public double[][] getArray_WAvgC_LES() {
-        return array_WAvgC_LES;
+    public double getWAvgC_LES(int type, int queue_length) {
+        if (this.array_WAvgC_LES[type][queue_length] == -1) {
+            return this.array_LES[type];
+        }
+        return array_WAvgC_LES[type][queue_length];
     }
 
     // s0=(1-alpha)s0 + alpha*w
     public void updateArray_WAvgC_LES(int type, int queue_length, double waiting_time, double alpha) {
-        if(this.array_WAvgC_LES[type][queue_length] == 0){
+        // si c'est le premier client à quitter la file, son temps d'attente sera la valeur de la moyenne
+        if (this.array_WAvgC_LES[type][queue_length] == -1) {
             alpha = 1.0;
         }
-        this.array_WAvgC_LES[type][queue_length] = (1-alpha)*this.array_WAvgC_LES[type][queue_length] + alpha*waiting_time;
+        this.array_WAvgC_LES[type][queue_length] = (1 - alpha) * this.array_WAvgC_LES[type][queue_length] + alpha * waiting_time;
     }
 
     public int getNb_busy_servers() {
@@ -254,9 +244,6 @@ public class ReplayOneDay {
     public void setMap(HashMap<Integer, Integer> map) {
         this.map = map;
     }
-
- 
-    
 
 
 }

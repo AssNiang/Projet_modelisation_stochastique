@@ -14,13 +14,13 @@ import java.util.LinkedList;
  */
 public class Test {
     
-    public static double getMoyenne(LinkedList<Double> liste){
-        Double sum = 0.0;
-        for(double i : liste){
-            sum+=i;
-        }
-        return sum/5;
-    }
+//    public static double getMoyenne(LinkedList<Double> liste){
+//        Double sum = 0.0;
+//        for(double i : liste){
+//            sum+=i;
+//        }
+//        return sum/5;
+//    }
     
      public static void main(String[] args) {
         /*LinkedList<Double> linkedList = new LinkedList<>();
@@ -37,6 +37,7 @@ public class Test {
          
          
       File dir  = new File("D:\\DIC2\\Modélisation Stochastique\\data");
+
       File[] liste = dir.listFiles();
       for(File item : liste){
         if(item.isFile())
