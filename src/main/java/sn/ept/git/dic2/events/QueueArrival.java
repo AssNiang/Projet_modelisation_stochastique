@@ -39,7 +39,7 @@ public class QueueArrival extends Event {
         
         cust.setAvgC_LES(getMoyenne(rd.getArray_AvgC_LES()[type][queue_length]));
         
-        cust.setWAvgC_LES(rd.getArray_WAvgC_LES()[type][queue_length]);
+        cust.setWAvgC_LES(rd.getWAvgC_LES(type, queue_length));
 //      - nb_busy_servers(le nombre de serveurs occupes)
         cust.setNb_server(rd.getNb_busy_servers());
 //      Placer le cust dans la file

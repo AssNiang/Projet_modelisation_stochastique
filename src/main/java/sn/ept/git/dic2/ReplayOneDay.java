@@ -33,18 +33,25 @@ public class ReplayOneDay {
 
 
     public ReplayOneDay(List<String> list) {
-        for (int i = 0; i < 27; i++) {
-            array_Avg_LES[i] = new LinkedList<Double>();
-            for (int j = 0; j < 100; j++) {
-                array_AvgC_LES[i][j] = new LinkedList<Double>();
-            }
-        }
+        // initializing variables
+        this.initVariables(array_Avg_LES, array_AvgC_LES, array_WAvgC_LES);
         // mapping type:index
         this.mappingTypeIndex(map);
 
         Sim.init();
-        createCustomerOfTheDay(list);
+        this.createCustomerOfTheDay(list);
         Sim.start();
+    }
+
+    private void initVariables(LinkedList<Double>[] array_Avg_LES, LinkedList<Double>[][] array_AvgC_LES, double[][]array_WAvgC_LES) {
+        for (int i = 0; i < 27; i++) {
+            array_Avg_LES[i] = new LinkedList<Double>();
+            for (int j = 0; j < 100; j++) {
+                array_AvgC_LES[i][j] = new LinkedList<Double>();
+                array_WAvgC_LES[i][j] = -1.0;
+            }
+        }
+
     }
 
     private void mappingTypeIndex(HashMap<Integer, Integer> map){
@@ -190,13 +197,17 @@ public class ReplayOneDay {
         }
     }
 
-    public double[][] getArray_WAvgC_LES() {
-        return array_WAvgC_LES;
+    public double getWAvgC_LES(int type, int queue_length) {
+        if (this.array_WAvgC_LES[type][queue_length] == -1) {
+            return this.array_LES[type];
+        }
+        return array_WAvgC_LES[type][queue_length];
     }
 
     // s0=(1-alpha)s0 + alpha*w
     public void updateArray_WAvgC_LES(int type, int queue_length, double waiting_time, double alpha) {
-        if (this.array_WAvgC_LES[type][queue_length] == 0) {
+        // si c'est le premier client à quitter la file, son temps d'attente sera la valeur de la moyenne
+        if (this.array_WAvgC_LES[type][queue_length] == -1) {
             alpha = 1.0;
         }
         this.array_WAvgC_LES[type][queue_length] = (1 - alpha) * this.array_WAvgC_LES[type][queue_length] + alpha * waiting_time;
